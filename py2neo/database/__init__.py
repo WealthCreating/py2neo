@@ -1126,6 +1126,20 @@ class Transaction(object):
         except AttributeError:
             raise TypeError("No method defined to delete object %r" % subgraph)
 
+    def detach(self, subgraph):
+        """ Delete the remote nodes and relationships that correspond to
+        those in a local subgraph. To delete only the relationships, use
+        the :meth:`.separate` method.
+
+        :param subgraph: a :class:`.Node`, :class:`.Relationship` or other
+                       :class:`.Subgraph`
+        """
+        try:
+            subgraph.__db_detach__(self)
+        except AttributeError:
+            raise TypeError("No method defined to delete object %r" % subgraph)
+
+
     def exists(self, subgraph):
         """ Determine whether one or more graph entities all exist within the
         database. Note that if any nodes or relationships in *subgraph* are not

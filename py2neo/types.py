@@ -359,6 +359,18 @@ class Subgraph(object):
         parameters = {"x": list(node_ids), "y": list(relationship_ids)}
         tx.run(statement, parameters)
 
+    def __db_detach__(self, tx):
+        node_ids = set()
+        for i, node in enumerate(self.nodes()):
+            remote_node = remote(node)
+            if remote_node:
+                node_ids.add(remote_node._id)
+            else:
+                return False
+        statement = ("MATCH (n) WHERE id(n) in {x} DETACH DELETE n")
+        parameters = {"x": list(node_ids)}
+        tx.run(statement, parameters)
+
     def __db_exists__(self, tx):
         node_ids = set()
         relationship_ids = set()
